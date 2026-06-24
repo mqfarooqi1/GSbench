@@ -18,4 +18,5 @@
 #' backends are optional (declared under Suggests) and used only if installed.
 #'
 #' @keywords internal
+#' @importFrom stats predict
 "_PACKAGE"

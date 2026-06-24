@@ -1,0 +1,125 @@
+---
+title: "Benchmarking genomic prediction models with GSbench"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Benchmarking genomic prediction models with GSbench}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>",
+                      fig.width = 7, fig.height = 4.5)
+```
+
+GSbench fits and compares genomic-selection models — GBLUP, ridge marker
+effects, and machine-learning methods — through one interface, using
+breeding-relevant cross-validation. This vignette walks through a full workflow.
+
+```{r setup}
+library(GSbench)
+```
+
+## A simulated dataset
+
+For a reproducible example we simulate a population: 300 lines, 2000 SNPs, 50
+QTL, narrow-sense heritability 0.5.
+
+```{r sim}
+sim <- simulate_population(n = 300, m = 2000, n_qtl = 50, h2 = 0.5, seed = 1)
+dim(sim$geno)
+sim$h2          # realised heritability
+```
+
+## Quality control
+
+Filter low-call-rate, low-MAF and monomorphic markers, and impute the rest.
+
+```{r qc}
+qc <- qc_markers(sim$geno, maf = 0.05, max_missing = 0.1)
+qc$removed
+geno <- qc$geno
+```
+
+## GBLUP and the genomic relationship matrix
+
+`gblup()` estimates variance components by REML. (Its GEBVs match
+`rrBLUP::mixed.solve` to within `6e-5` — see the package tests.)
+
+```{r gblup}
+fit <- gblup(sim$pheno, geno)
+fit
+cor(fit$gebv, sim$bv)     # accuracy against the true breeding values
+```
+
+Because `geno` was supplied, the fit also carries ridge marker effects, so it
+can predict new genotypes:
+
+```{r predict}
+train <- 1:240; test <- 241:300
+fit_tr <- gs_fit(sim$pheno[train], geno[train, ], model = "gblup")
+pred   <- predict(fit_tr, geno[test, ])
+cor(pred, sim$bv[test])
+```
+
+## One interface for many models
+
+`gs_fit()` exposes the same API for every model family. Which are available
+depends on which optional packages you have installed:
+
+```{r available}
+available_models()
+```
+
+```{r models, eval = requireNamespace("glmnet", quietly = TRUE)}
+en <- gs_fit(sim$pheno[train], geno[train, ], model = "elastic_net")
+cor(predict(en, geno[test, ]), sim$bv[test])
+```
+
+## Cross-validation, done correctly
+
+`gs_cv()` runs breeding-relevant cross-validation. Random k-fold predicts
+untested lines (CV1); `leave_group_out` holds out whole families or
+environments.
+
+```{r cv}
+cv <- gs_cv(sim$pheno, geno, models = "gblup", k = 5, reps = 1, seed = 1)
+cv
+
+# leave-one-family-out, with a toy family structure
+fam <- rep(1:6, length.out = nrow(geno))
+gs_cv(sim$pheno, geno, models = "gblup",
+      scheme = "leave_group_out", groups = fam)
+```
+
+## A stacked ensemble
+
+`gs_ensemble()` combines base models into a super-learner: each model's
+out-of-fold predictions are used to learn non-negative weights (summing to one),
+and the final predictor is that weighted blend.
+
+```{r ensemble}
+ens <- gs_ensemble(sim$pheno, geno, base_models = "gblup", seed = 1)
+ens$weights
+```
+
+With several base models installed, the weights show how much each contributes.
+
+## Benchmarking everything at once
+
+`gs_benchmark()` runs every available model — including the ensemble — under one
+cross-validation and reports predictive ability so you can compare them fairly.
+
+```{r benchmark}
+bench <- gs_benchmark(sim$pheno, geno, models = c("gblup", "ensemble"),
+                      k = 5, seed = 1)
+bench$accuracy
+```
+
+```{r benchplot}
+plot(bench)
+```
+
+For an additive trait like this one, GBLUP and elastic net are typically
+strongest; tree methods trail; the ensemble lands near the top without you
+having to pick the winner in advance.
