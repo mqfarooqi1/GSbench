@@ -7,22 +7,22 @@
 gblup(y, geno = NULL, K = NULL, X = NULL)
 }
 \arguments{
-\item{y}{Numeric phenotype vector (length n). Missing values are not allowed;
-subset to phenotyped individuals first.}
+\item{y}{Numeric phenotype vector (length n), no missing values.}
 
 \item{geno}{Optional marker matrix (n x m, coded 0/1/2). Used to build \code{K}
-with \code{\link[=Gmatrix]{Gmatrix()}} if \code{K} is not supplied.}
+and to derive marker effects for out-of-sample prediction.}
 
 \item{K}{Optional n x n genomic relationship matrix. If \code{NULL}, built from
-\code{geno}.}
+\code{geno}. If you pass \code{K} directly (no \code{geno}), out-of-sample prediction is
+not available.}
 
 \item{X}{Optional fixed-effects design matrix (n x p). Defaults to an
 intercept.}
 }
 \value{
-An object of class \code{gblup}: a list with \code{Vu} (genetic variance), \code{Ve}
-(residual variance), \code{h2} (\code{Vu/(Vu+Ve)}), \code{beta} (fixed effects), \code{gebv}
-(genomic estimated breeding values, length n), and \code{K}.
+An object of class \code{gblup}: a list with \code{Vu}, \code{Ve}, \code{h2}, \code{beta}
+(fixed effects), \code{gebv} (length-n GEBVs), \code{lambda}, \code{K}, and — when \code{geno}
+was given — \code{marker_effects}, \code{marker_means} (2p) and \code{intercept}.
 }
 \description{
 Fits the genomic best linear unbiased prediction model
@@ -32,11 +32,16 @@ uses the spectral / eigendecomposition approach of Endelman (2011) (the same
 method as \code{rrBLUP::mixed.solve}): the REML log-likelihood is profiled to a
 one-dimensional optimisation over the variance ratio \code{lambda = s2e / s2u}.
 }
+\details{
+When \code{geno} is supplied, the equivalent ridge-regression marker effects are
+also returned, so the fit can predict breeding values for \emph{new} genotypes via
+\code{\link[=predict.gblup]{predict.gblup()}}.
+}
 \examples{
 sim <- simulate_population(n = 120, m = 500, seed = 1)
 fit <- gblup(sim$pheno, sim$geno)
 fit$h2
-cor(fit$gebv, sim$bv)   # accuracy vs the true breeding values
+cor(fit$gebv, sim$bv)
 }
 \references{
 Endelman, J. B. (2011) "Ridge regression and other kernels for
