@@ -1,0 +1,13 @@
+# R
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+*.Rproj
+/*.tar.gz
+/*.Rcheck/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
