@@ -21,6 +21,7 @@ test_that("GBLUP predicts held-out individuals with signal", {
 })
 
 test_that("each available ML learner fits and predicts", {
+  skip_on_cran()   # ML backends use OpenMP threads; keep CRAN's run single-core
   sim <- simulate_population(n = 120, m = 300, seed = 3)
   for (mdl in setdiff(available_models(), c("gblup", "ensemble"))) {
     fit <- gs_fit(sim$pheno, sim$geno, model = mdl)
@@ -47,6 +48,7 @@ test_that("leave_group_out scheme works", {
 })
 
 test_that("stacked ensemble produces valid weights and predictions", {
+  skip_on_cran()   # exercises ML base models (OpenMP); run locally only
   sim <- simulate_population(n = 120, m = 300, seed = 6)
   ens <- gs_ensemble(sim$pheno, sim$geno,
                      base_models = c("gblup", "elastic_net"), seed = 1)
@@ -58,6 +60,7 @@ test_that("stacked ensemble produces valid weights and predictions", {
 })
 
 test_that("gs_benchmark runs across models", {
+  skip_on_cran()   # ensemble pulls in ML base models (OpenMP); run locally only
   sim <- simulate_population(n = 120, m = 300, seed = 7)
   bench <- gs_benchmark(sim$pheno, sim$geno,
                         models = c("gblup", "ensemble"), k = 3, seed = 1)
