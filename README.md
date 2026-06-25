@@ -1,5 +1,11 @@
 # GSbench
 
+<!-- badges: start -->
+[![CRAN status](https://www.r-pkg.org/badges/version/GSbench)](https://CRAN.R-project.org/package=GSbench)
+[![R-universe](https://mqfarooqi1.r-universe.dev/badges/GSbench)](https://mqfarooqi1.r-universe.dev/GSbench)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+<!-- badges: end -->
+
 Benchmark genomic-selection models — classic and machine-learning — from SNP
 marker data, through **one interface**, with **breeding-relevant
 cross-validation** and **honest accuracy reporting**.

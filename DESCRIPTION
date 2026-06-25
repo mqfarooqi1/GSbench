@@ -34,8 +34,10 @@ Suggests:
     rmarkdown,
     spelling
 VignetteBuilder: knitr
-URL: https://github.com/mqfarooqi1/GSbench
+URL: https://github.com/mqfarooqi1/GSbench,
+    https://mqfarooqi1.github.io/GSbench/
 BugReports: https://github.com/mqfarooqi1/GSbench/issues
+Config/Needs/website: pkgdown
 Config/testthat/edition: 3
 Roxygen: list(markdown = TRUE)
 Config/roxygen2/version: 8.0.0
