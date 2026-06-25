@@ -1,4 +1,4 @@
-# GSbench
+# GSbench <a href="https://mqfarooqi1.github.io/GSbench/"><img src="man/figures/logo.svg" align="right" height="138" alt="GSbench logo" /></a>
 
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/GSbench)](https://CRAN.R-project.org/package=GSbench)
