@@ -1,0 +1,221 @@
+---
+title: "GSbench — a visual walkthrough"
+subtitle: "Genomic selection from SNP data, explained with pictures"
+author: "Muhammad Farooqi"
+date: today
+format:
+  html:
+    toc: true
+    toc-depth: 2
+    code-fold: show
+    code-tools: true
+    theme: cosmo
+    fig-width: 7
+    fig-height: 4.5
+    embed-resources: true
+execute:
+  warning: false
+  message: false
+---
+
+This walkthrough runs every major part of **GSbench** on a small simulated
+dataset with **three subpopulations**, and visualises each step so you can *see*
+what genomic selection is doing. Open it in RStudio and click **Render**, or run
+the chunks one by one.
+
+```{r setup}
+library(GSbench)
+library(ggplot2)
+set.seed(1)
+theme_set(theme_minimal(base_size = 12))
+pal <- c(Pop1 = "#2c7fb8", Pop2 = "#d95f02", Pop3 = "#1b9e77")
+```
+
+# 1. A structured dummy population
+
+We simulate 180 individuals in three subpopulations that differ slightly in
+allele frequencies (so there is real population structure to see), genotyped at
+500 SNPs coded 0/1/2, with a quantitative trait controlled by 40 causal markers
+(heritability ~ 0.5).
+
+```{r data}
+n_per <- 60; n_pop <- 3; m <- 500
+pops  <- factor(rep(paste0("Pop", 1:n_pop), each = n_per))
+n     <- n_per * n_pop
+
+base_p <- runif(m, 0.1, 0.9)
+geno <- matrix(0, n, m)
+for (k in 1:n_pop) {
+  pk  <- pmin(pmax(base_p + rnorm(m, 0, 0.08) * (k - 2), 0.02), 0.98)  # structure
+  idx <- ((k - 1) * n_per + 1):(k * n_per)
+  geno[idx, ] <- sapply(pk, function(p) rbinom(n_per, 2, p))
+}
+colnames(geno) <- sprintf("SNP%03d", 1:m)
+rownames(geno) <- sprintf("ID%03d", 1:n)
+
+qtl   <- sample(m, 40)
+gv    <- as.numeric(scale(geno[, qtl]) %*% rnorm(40))
+h2    <- 0.5
+pheno <- gv + rnorm(n, sd = sqrt(var(gv) * (1 - h2) / h2))
+```
+
+## The trait
+
+```{r trait}
+ggplot(data.frame(pheno, pops), aes(pheno, fill = pops)) +
+  geom_histogram(bins = 30, alpha = .85, colour = "white") +
+  scale_fill_manual(values = pal) +
+  labs(title = "Phenotype distribution by subpopulation",
+       x = "phenotype", y = "count", fill = "population")
+```
+
+## Allele-frequency spectrum
+
+```{r maf}
+p <- colMeans(geno) / 2
+ggplot(data.frame(maf = pmin(p, 1 - p)), aes(maf)) +
+  geom_histogram(bins = 30, fill = "#2c7fb8", colour = "white") +
+  labs(title = "Minor-allele frequency spectrum", x = "MAF", y = "markers")
+```
+
+# 2. Genomic relationship matrix
+
+`Gmatrix()` computes the VanRaden relationship between every pair of
+individuals. Ordering rows/columns by clustering reveals the block structure of
+the three subpopulations.
+
+```{r grm}
+G   <- Gmatrix(geno)
+ord <- hclust(dist(G))$order
+Go  <- G[ord, ord]
+df  <- expand.grid(i = 1:n, j = 1:n); df$rel <- as.vector(Go)
+ggplot(df, aes(i, j, fill = rel)) +
+  geom_raster() + coord_equal() +
+  scale_fill_viridis_c(option = "D") +
+  labs(title = "Genomic relationship matrix (clustered)",
+       x = NULL, y = NULL, fill = "relationship")
+```
+
+# 3. Population structure
+
+## PCA of the markers
+
+```{r pca}
+pc <- prcomp(geno, scale. = FALSE)
+ve <- pc$sdev^2 / sum(pc$sdev^2)
+ggplot(data.frame(PC1 = pc$x[, 1], PC2 = pc$x[, 2], pops),
+       aes(PC1, PC2, colour = pops)) +
+  geom_point(size = 2.6, alpha = .85) +
+  scale_colour_manual(values = pal) +
+  labs(title = "Population structure (PCA)",
+       x = sprintf("PC1 (%.1f%%)", 100 * ve[1]),
+       y = sprintf("PC2 (%.1f%%)", 100 * ve[2]), colour = "population")
+```
+
+## Clustering dendrogram
+
+```{r dendro}
+hc <- hclust(dist(geno))
+plot(hc, labels = FALSE, main = "Hierarchical clustering of individuals",
+     xlab = "", sub = "")
+rect.hclust(hc, k = 3, border = unname(pal))
+```
+
+# 4. GBLUP
+
+Fit GBLUP by REML on a training set, holding out 45 individuals to test
+prediction.
+
+```{r gblup}
+set.seed(2)
+test  <- sample(n, 45); train <- setdiff(1:n, test)
+fit   <- gblup(pheno[train], geno = geno[train, ])
+```
+
+## Variance components and heritability
+
+```{r vc}
+vc <- data.frame(component = c("genetic (Vu)", "residual (Ve)"),
+                 value = c(fit$Vu, fit$Ve))
+ggplot(vc, aes(component, value, fill = component)) +
+  geom_col(width = .6) +
+  scale_fill_manual(values = c("#1b9e77", "#7570b3"), guide = "none") +
+  labs(title = sprintf("Variance components (estimated h2 = %.2f)", fit$h2),
+       x = NULL, y = "variance")
+```
+
+## Predicted vs observed (test set)
+
+```{r predobs}
+pred <- predict(fit, geno[test, ])
+r    <- cor(pred, pheno[test])
+ggplot(data.frame(pred, obs = pheno[test], pop = pops[test]),
+       aes(pred, obs, colour = pop)) +
+  geom_point(size = 2.6, alpha = .85) +
+  geom_smooth(method = "lm", se = FALSE, colour = "grey40") +
+  scale_colour_manual(values = pal) +
+  labs(title = sprintf("GBLUP prediction accuracy (test r = %.2f)", r),
+       x = "predicted breeding value", y = "observed phenotype", colour = "population")
+```
+
+## Where the signal is: marker effects
+
+The equivalent ridge-regression marker effects highlight the causal QTL.
+
+```{r effects}
+me <- data.frame(idx = seq_along(fit$marker_effects),
+                 eff = abs(fit$marker_effects),
+                 causal = seq_along(fit$marker_effects) %in% qtl)
+ggplot(me, aes(idx, eff, colour = causal)) +
+  geom_point(size = 1.4) +
+  scale_colour_manual(values = c(`FALSE` = "grey75", `TRUE` = "#d95f02"),
+                      labels = c("other", "causal QTL")) +
+  labs(title = "Estimated marker effects", x = "marker index",
+       y = "|effect|", colour = NULL)
+```
+
+## Breeding values by subpopulation
+
+```{r gebv}
+gebv_all <- predict(fit, geno)
+ggplot(data.frame(gebv = gebv_all, pops), aes(pops, gebv, fill = pops)) +
+  geom_violin(alpha = .6) +
+  geom_jitter(width = .12, size = 1, alpha = .5) +
+  scale_fill_manual(values = pal, guide = "none") +
+  labs(title = "Genomic estimated breeding values by population",
+       x = NULL, y = "GEBV")
+```
+
+# 5. Comparing models by cross-validation
+
+```{r cv}
+cv <- gs_cv(pheno, geno,
+            models = c("gblup", "elastic_net", "random_forest", "xgboost"),
+            k = 5, seed = 1)
+s  <- as.data.frame(summary(cv))
+ggplot(s, aes(reorder(model, mean), mean, fill = model)) +
+  geom_col(width = .65) +
+  geom_errorbar(aes(ymin = mean - sd, ymax = mean + sd), width = .2) +
+  coord_flip() +
+  scale_fill_viridis_d(option = "D", end = .85, guide = "none") +
+  labs(title = "Cross-validated predictive ability",
+       x = NULL, y = "accuracy (cor, held-out)")
+```
+
+# 6. Stacked ensemble
+
+```{r ensemble}
+ens <- gs_ensemble(pheno[train], geno[train, ], seed = 1)
+pe  <- predict(ens, geno[test, ])
+sprintf("Ensemble test accuracy: %.3f", cor(pe, pheno[test]))
+```
+
+# Summary
+
+You have now seen, visually, the full GSbench workflow: the data and its
+structure, the genomic relationship matrix, GBLUP variance components and
+predictions, where the causal signal sits, breeding values by group, and an
+honest model comparison by cross-validation.
+
+See the [GSbench documentation](https://mqfarooqi1.github.io/GSbench/) for
+details, and `examples/GSbench_demo.R` for a plain-script version.
