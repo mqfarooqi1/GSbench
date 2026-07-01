@@ -15,8 +15,18 @@ can actually trust — plus a stacked ensemble that combines them.
 
 ## Installation
 
+GSbench is on [CRAN](https://CRAN.R-project.org/package=GSbench)
+(published 2026-06-30):
+
 ``` r
 
+# from CRAN (recommended)
+install.packages("GSbench")
+
+# or from R-universe
+install.packages("GSbench", repos = "https://mqfarooqi1.r-universe.dev")
+
+# or the development version from GitHub
 # install.packages("remotes")
 remotes::install_github("mqfarooqi1/GSbench")
 ```
