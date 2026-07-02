@@ -2,6 +2,8 @@
 
 ## All functions
 
+- [`Dmatrix()`](https://mqfarooqi1.github.io/GSbench/reference/Dmatrix.md)
+  : Dominance genomic relationship matrix
 - [`Gmatrix()`](https://mqfarooqi1.github.io/GSbench/reference/Gmatrix.md)
   : Genomic relationship matrix (VanRaden)
 - [`available_models()`](https://mqfarooqi1.github.io/GSbench/reference/available_models.md)
@@ -16,10 +18,15 @@
   : Stacked super-learner ensemble of genomic prediction models
 - [`gs_fit()`](https://mqfarooqi1.github.io/GSbench/reference/gs_fit.md)
   : Fit a genomic prediction model
+- [`gwas()`](https://mqfarooqi1.github.io/GSbench/reference/gwas.md)
+  [`print(`*`<gs_gwas>`*`)`](https://mqfarooqi1.github.io/GSbench/reference/gwas.md)
+  : Single-marker genome-wide association scan
 - [`impute_markers()`](https://mqfarooqi1.github.io/GSbench/reference/impute_markers.md)
   : Impute missing marker genotypes
 - [`plot(`*`<gs_cv>`*`)`](https://mqfarooqi1.github.io/GSbench/reference/plot.gs_cv.md)
   : Plot a model comparison
+- [`plot(`*`<gs_gwas>`*`)`](https://mqfarooqi1.github.io/GSbench/reference/plot.gs_gwas.md)
+  : Plot a GWAS scan (Manhattan or QQ)
 - [`predict(`*`<gblup>`*`)`](https://mqfarooqi1.github.io/GSbench/reference/predict.gblup.md)
   : Predict breeding values for new genotypes from a GBLUP fit
 - [`predict(`*`<gs_ensemble>`*`)`](https://mqfarooqi1.github.io/GSbench/reference/predict.gs_model.md)

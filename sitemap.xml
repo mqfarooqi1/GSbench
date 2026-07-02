@@ -6,6 +6,7 @@
 <url><loc>https://mqfarooqi1.github.io/GSbench/authors.html</loc></url>
 <url><loc>https://mqfarooqi1.github.io/GSbench/index.html</loc></url>
 <url><loc>https://mqfarooqi1.github.io/GSbench/news/index.html</loc></url>
+<url><loc>https://mqfarooqi1.github.io/GSbench/reference/Dmatrix.html</loc></url>
 <url><loc>https://mqfarooqi1.github.io/GSbench/reference/GSbench-package.html</loc></url>
 <url><loc>https://mqfarooqi1.github.io/GSbench/reference/Gmatrix.html</loc></url>
 <url><loc>https://mqfarooqi1.github.io/GSbench/reference/available_models.html</loc></url>
@@ -14,9 +15,11 @@
 <url><loc>https://mqfarooqi1.github.io/GSbench/reference/gs_cv.html</loc></url>
 <url><loc>https://mqfarooqi1.github.io/GSbench/reference/gs_ensemble.html</loc></url>
 <url><loc>https://mqfarooqi1.github.io/GSbench/reference/gs_fit.html</loc></url>
+<url><loc>https://mqfarooqi1.github.io/GSbench/reference/gwas.html</loc></url>
 <url><loc>https://mqfarooqi1.github.io/GSbench/reference/impute_markers.html</loc></url>
 <url><loc>https://mqfarooqi1.github.io/GSbench/reference/index.html</loc></url>
 <url><loc>https://mqfarooqi1.github.io/GSbench/reference/plot.gs_cv.html</loc></url>
+<url><loc>https://mqfarooqi1.github.io/GSbench/reference/plot.gs_gwas.html</loc></url>
 <url><loc>https://mqfarooqi1.github.io/GSbench/reference/predict.gblup.html</loc></url>
 <url><loc>https://mqfarooqi1.github.io/GSbench/reference/predict.gs_model.html</loc></url>
 <url><loc>https://mqfarooqi1.github.io/GSbench/reference/qc_markers.html</loc></url>

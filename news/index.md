@@ -1,5 +1,21 @@
 # Changelog
 
+## GSbench 0.2.0
+
+New features:
+
+- [`gwas()`](https://mqfarooqi1.github.io/GSbench/reference/gwas.md)
+  performs a single-marker genome-wide association scan with optional
+  principal-component structure correction, returning a `gs_gwas` object
+  with [`print()`](https://rdrr.io/r/base/print.html) and
+  [`plot()`](https://rdrr.io/r/graphics/plot.default.html) methods
+  (Manhattan and QQ plots).
+- [`Dmatrix()`](https://mqfarooqi1.github.io/GSbench/reference/Dmatrix.md)
+  builds the dominance genomic relationship matrix (Vitezica et al.
+  2013), which can be passed to
+  [`gblup()`](https://mqfarooqi1.github.io/GSbench/reference/gblup.md)
+  as `K` to fit a dominance GBLUP model.
+
 ## GSbench 0.1.0
 
 CRAN release: 2026-06-30

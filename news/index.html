@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">GSbench</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,6 +33,14 @@
     </div>
 
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.2.0" id="gsbench-020">GSbench 0.2.0<a class="anchor" aria-label="anchor" href="#gsbench-020"></a></h2>
+<p>New features:</p>
+<ul><li>
+<code><a href="../reference/gwas.html">gwas()</a></code> performs a single-marker genome-wide association scan with optional principal-component structure correction, returning a <code>gs_gwas</code> object with <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> and <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> methods (Manhattan and QQ plots).</li>
+<li>
+<code><a href="../reference/Dmatrix.html">Dmatrix()</a></code> builds the dominance genomic relationship matrix (Vitezica et al. 2013), which can be passed to <code><a href="../reference/gblup.html">gblup()</a></code> as <code>K</code> to fit a dominance GBLUP model.</li>
+</ul></div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.0" id="gsbench-010">GSbench 0.1.0<a class="anchor" aria-label="anchor" href="#gsbench-010"></a></h2><p class="text-muted">CRAN release: 2026-06-30</p>
 <p>First release.</p>
 <ul><li>Core (base R): <code><a href="../reference/simulate_population.html">simulate_population()</a></code>, <code><a href="../reference/qc_markers.html">qc_markers()</a></code>, <code><a href="../reference/impute_markers.html">impute_markers()</a></code>, <code><a href="../reference/Gmatrix.html">Gmatrix()</a></code> (VanRaden), and <code><a href="../reference/gblup.html">gblup()</a></code> (GBLUP by REML, validated against <code><a href="https://rdrr.io/pkg/rrBLUP/man/mixed.solve.html" class="external-link">rrBLUP::mixed.solve</a></code>).</li>
@@ -44,7 +52,8 @@
 <li>
 <code><a href="../reference/gs_benchmark.html">gs_benchmark()</a></code> with <code>print</code>/<code>summary</code>/<code>plot</code> to compare all available models under one cross-validation.</li>
 </ul></div>
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
