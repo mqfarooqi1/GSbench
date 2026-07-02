@@ -1,8 +1,8 @@
 # Changelog
 
-## GSbench 0.2.0
+## GSbench (development version)
 
-New features:
+Planned for the next release (0.2.0):
 
 - [`gwas()`](https://mqfarooqi1.github.io/GSbench/reference/gwas.md)
   performs a single-marker genome-wide association scan with optional
