@@ -1,6 +1,6 @@
-# GSbench 0.2.0
+# GSbench (development version)
 
-New features:
+Planned for the next release (0.2.0):
 
 * `gwas()` performs a single-marker genome-wide association scan with optional
   principal-component structure correction, returning a `gs_gwas` object with
