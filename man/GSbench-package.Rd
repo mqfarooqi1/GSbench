@@ -31,6 +31,7 @@ backends are optional (declared under Suggests) and used only if installed.
 Useful links:
 \itemize{
   \item \url{https://github.com/mqfarooqi1/GSbench}
+  \item \url{https://mqfarooqi1.github.io/GSbench/}
   \item Report bugs at \url{https://github.com/mqfarooqi1/GSbench/issues}
 }
 

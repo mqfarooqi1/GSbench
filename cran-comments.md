@@ -1,40 +1,37 @@
-## Resubmission
+## Update to version 0.2.0
 
-This resubmission addresses the NOTEs from the automated incoming pre-test.
+This is a feature update. New functionality:
 
-### "Possibly misspelled words in DESCRIPTION"
-These are not misspellings:
+* `gwas()` — single-marker genome-wide association scan with optional
+  principal-component structure correction, returning a `gs_gwas` object with
+  `print()` and `plot()` (Manhattan / QQ) methods.
+* `Dmatrix()` — dominance genomic relationship matrix (Vitezica et al. 2013),
+  usable in `gblup()` as `K` to fit a dominance model.
 
-* BLUP, GBLUP - established acronyms in quantitative genetics (genomic best
-  linear unbiased prediction), already spelled out in the Description.
-* Endelman, Meuwissen, VanRaden - author surnames in the method references.
-* Benchmarking - a correct English word (the first word of the Title).
-
-No change was needed for these; they are flagged because they are domain
-acronyms and proper names.
-
-### "CPU time N times elapsed time" in tests (Debian)
-Fixed. The affected tests exercised the optional machine-learning backends
-(ranger, xgboost), which use OpenMP threads internally. Those tests are now
-guarded with `testthat::skip_on_cran()`, so CRAN's test run stays single-core;
-they continue to run locally. The remaining on-CRAN tests use only base R and
-the GBLUP solver.
+No user-facing changes to existing functions; the update is backward compatible.
 
 ## R CMD check results
 
 Local `R CMD check --as-cran` (Windows 11, R 4.5.2): 0 errors | 0 warnings |
-1 note (the standard "New submission").
+2 notes.
+
+* The only WARNING seen locally is `'qpdf' is needed for checks on size
+  reduction of PDFs` — an artifact of qpdf not being installed on the local
+  machine; it does not occur on systems with qpdf (e.g. CRAN).
+* NOTE "unable to verify current time" is a local network/clock artifact.
+* NOTE (incoming feasibility) reports the maintainer and days since the last
+  update; the update is justified by the substantial new features above.
 
 ## Notes
 
-* The GBLUP solver is base R and validated against `rrBLUP::mixed.solve` in the
-  (non-CRAN) tests.
-* Machine-learning backends are optional (Suggests) and thread-limited
-  (`num.threads = 1`, `nthread = 1`); tests using them now skip on CRAN.
-* Functions write only to `tempdir()` and do not modify the global environment
-  (seeds via `withr::with_seed()`). Method references carry DOIs.
+* Any "possibly misspelled words" are domain acronyms (GBLUP, GWAS, QQ) and
+  author surnames (VanRaden, Endelman, Meuwissen, Vitezica); these are listed in
+  `inst/WORDLIST`.
+* Machine-learning backends remain optional (Suggests) and thread-limited; tests
+  using them skip on CRAN so the test run stays single-core.
+* Functions write only to `tempdir()` and do not modify the global environment.
+  Method references carry DOIs.
 
 ## Test environments
 
 * Local: Windows 11, R 4.5.2
-* win-builder (r-devel): the pre-test NOTEs above, now addressed.

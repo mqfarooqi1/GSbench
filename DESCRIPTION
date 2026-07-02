@@ -1,6 +1,6 @@
 Package: GSbench
 Title: Benchmarking Genomic Selection and Machine-Learning Prediction Models
-Version: 0.1.0
+Version: 0.2.0
 Authors@R:
     person("Muhammad", "Farooqi", email = "mqfarooqi@gmail.com",
            role = c("aut", "cre"))
