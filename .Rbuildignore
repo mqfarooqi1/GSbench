@@ -10,3 +10,5 @@
 ^pkgdown$
 ^\.github$
 ^examples$
+^Dockerfile$
+^\.dockerignore$
