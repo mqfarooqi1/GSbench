@@ -12,3 +12,4 @@
 ^examples$
 ^Dockerfile$
 ^\.dockerignore$
+^CITATION\.cff$
