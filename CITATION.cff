@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you use GSbench, please cite it as below."
+title: "GSbench: Benchmarking Genomic Selection and Machine-Learning Prediction Models"
+abstract: >-
+  A unified interface to fit, cross-validate and benchmark genomic prediction models from SNP marker data, covering GBLUP, ridge-regression BLUP, machine-learning predictors and a stacked ensemble.
+type: software
+authors:
+  - given-names: Muhammad
+    family-names: Farooqi
+    email: mqfarooqi@gmail.com
+    orcid: "https://orcid.org/0000-0003-4918-9791"
+version: 0.1.0
+date-released: "2026-07-27"
+license: MIT
+repository-code: "https://github.com/mqfarooqi1/GSbench"
+url: "https://CRAN.R-project.org/package=GSbench"
+keywords:
+  - R
+  - CRAN
