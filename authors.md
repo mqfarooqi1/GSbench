@@ -11,12 +11,12 @@ Source:
 
 Farooqi M (2026). *GSbench: Benchmarking Genomic Selection and
 Machine-Learning Prediction Models*. R package version 0.1.0,
-<https://github.com/mqfarooqi1/GSbench>.
+<https://CRAN.R-project.org/package=GSbench>.
 
     @Manual{,
-      title = {{GSbench}: Benchmarking Genomic Selection and Machine-Learning Prediction Models},
+      title = {{GSbench: Benchmarking Genomic Selection and Machine-Learning Prediction Models}},
       author = {Muhammad Farooqi},
       year = {2026},
       note = {R package version 0.1.0},
-      url = {https://github.com/mqfarooqi1/GSbench},
+      url = {https://CRAN.R-project.org/package=GSbench},
     }
